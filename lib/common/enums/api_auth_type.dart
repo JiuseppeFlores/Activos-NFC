@@ -1,0 +1,1 @@
+enum ApiAuthType { bearer, apiKey, none }
