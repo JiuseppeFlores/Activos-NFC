@@ -1,5 +1,6 @@
-import 'package:activos_empresa_app/common/data/data.dart';
-import 'package:activos_empresa_app/ui/screens/screens.dart';
+import 'package:activos_nfc_app/common/data/data.dart';
+import 'package:activos_nfc_app/common/enums/enums.dart';
+import 'package:activos_nfc_app/ui/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -27,7 +28,8 @@ class _QRScreenState extends State<QRScreen> {
           MaterialPageRoute(
             builder: (_) 
               => ProductScreen(
-                  barcode: barcode?.displayValue ?? DefaultData.string,
+                    code: barcode?.displayValue ?? DefaultData.string,
+                    type: ScanType.barcode,
                   ),
           )
         ).then((_) => _controller.start());

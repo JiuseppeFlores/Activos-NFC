@@ -1,4 +1,4 @@
-import 'package:activos_empresa_app/common/utils/utils.dart';
+import 'package:activos_nfc_app/common/utils/utils.dart';
 
 class FieldData {
   static final username = FieldController(required: true, specialCharacter: false, min: 4, max: 24);

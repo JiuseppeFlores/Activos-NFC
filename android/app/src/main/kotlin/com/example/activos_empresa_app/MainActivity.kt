@@ -1,4 +1,4 @@
-package com.example.activos_empresa_app
+package com.example.activos_nfc_app
 
 import io.flutter.embedding.android.FlutterActivity
 

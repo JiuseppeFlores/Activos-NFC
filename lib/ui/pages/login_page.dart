@@ -1,7 +1,7 @@
-import 'package:activos_empresa_app/blocs/blocs.dart';
-import 'package:activos_empresa_app/core/models/models.dart';
-import 'package:activos_empresa_app/ui/forms/forms.dart';
-import 'package:activos_empresa_app/ui/pages/pages.dart';
+import 'package:activos_nfc_app/blocs/blocs.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/ui/forms/forms.dart';
+import 'package:activos_nfc_app/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

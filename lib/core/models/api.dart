@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:activos_empresa_app/common/enums/enums.dart';
+import 'package:activos_nfc_app/common/enums/enums.dart';
 import 'package:dio/dio.dart';
 
 abstract class API {

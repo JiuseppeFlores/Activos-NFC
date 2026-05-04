@@ -1,4 +1,4 @@
-import 'package:activos_empresa_app/common/data/data.dart';
+import 'package:activos_nfc_app/common/data/data.dart';
 import 'package:flutter/material.dart';
 
 class MessageDialogView extends StatelessWidget {

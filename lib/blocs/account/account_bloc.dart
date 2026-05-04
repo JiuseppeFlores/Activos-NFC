@@ -1,12 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:activos_empresa_app/common/enums/enums.dart';
-import 'package:activos_empresa_app/common/utils/utils.dart';
-import 'package:activos_empresa_app/core/clients/clients.dart';
-import 'package:activos_empresa_app/core/models/models.dart';
-import 'package:activos_empresa_app/core/services/services.dart';
-import 'package:activos_empresa_app/ui/screens/screens.dart';
-import 'package:activos_empresa_app/ui/views/views.dart';
+import 'package:activos_nfc_app/common/enums/enums.dart';
+import 'package:activos_nfc_app/common/utils/utils.dart';
+import 'package:activos_nfc_app/core/clients/clients.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/core/services/services.dart';
+import 'package:activos_nfc_app/ui/screens/screens.dart';
+import 'package:activos_nfc_app/ui/views/views.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +75,20 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     const action = 'ACTIVO NO ASIGNADO';
     final service = ProductService(ProductClient());
     final response = await service.getProductByBarcode(barcode);
+    final data = response.data;
+    if(!response.isSuccessful){
+      DialogAlertManager.showDialogAlert(
+        context,
+        MessageDialogView(title: action, icon: Icons.warning, message: response.error.replaceAll('<br>', '\n')),
+      );
+    }
+    return data;
+  }
+
+  Future<Map<String, dynamic>?> getProductByUIDTag(BuildContext context, String uidTag) async {
+    const action = 'ACTIVO NO ASIGNADO';
+    final service = ProductService(ProductClient());
+    final response = await service.getProductByUIDTag(uidTag);
     final data = response.data;
     if(!response.isSuccessful){
       DialogAlertManager.showDialogAlert(

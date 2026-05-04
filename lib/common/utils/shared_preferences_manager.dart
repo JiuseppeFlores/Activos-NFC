@@ -1,5 +1,5 @@
-import 'package:activos_empresa_app/common/data/data.dart';
-import 'package:activos_empresa_app/core/models/models.dart';
+import 'package:activos_nfc_app/common/data/data.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesManager {

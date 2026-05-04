@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:activos_empresa_app/common/data/data.dart';
-import 'package:activos_empresa_app/common/enums/enums.dart';
-import 'package:activos_empresa_app/common/utils/utils.dart';
-import 'package:activos_empresa_app/core/models/models.dart';
+import 'package:activos_nfc_app/common/data/data.dart';
+import 'package:activos_nfc_app/common/enums/enums.dart';
+import 'package:activos_nfc_app/common/utils/utils.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
 import 'package:dio/dio.dart';
 
 abstract class DioClient extends API {

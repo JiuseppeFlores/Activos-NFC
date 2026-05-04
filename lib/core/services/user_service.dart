@@ -1,10 +1,10 @@
 
 import 'dart:convert';
 
-import 'package:activos_empresa_app/common/enums/enums.dart';
-import 'package:activos_empresa_app/common/utils/utils.dart';
-import 'package:activos_empresa_app/core/clients/clients.dart';
-import 'package:activos_empresa_app/core/models/models.dart';
+import 'package:activos_nfc_app/common/enums/enums.dart';
+import 'package:activos_nfc_app/common/utils/utils.dart';
+import 'package:activos_nfc_app/core/clients/clients.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
 
 class UserService {
 

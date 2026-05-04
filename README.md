@@ -1,4 +1,4 @@
-# activos_empresa_app
+# activos_nfc_app
 
 A new Flutter project.
 

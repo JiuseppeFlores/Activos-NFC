@@ -1,6 +1,6 @@
-import 'package:activos_empresa_app/common/data/data.dart';
-import 'package:activos_empresa_app/common/enums/enums.dart';
-import 'package:activos_empresa_app/ui/widgets/widgets.dart';
+import 'package:activos_nfc_app/common/data/data.dart';
+import 'package:activos_nfc_app/common/enums/enums.dart';
+import 'package:activos_nfc_app/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 

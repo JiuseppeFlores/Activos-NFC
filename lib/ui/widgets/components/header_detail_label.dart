@@ -1,4 +1,4 @@
-import 'package:activos_empresa_app/ui/widgets/widgets.dart';
+import 'package:activos_nfc_app/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class HeaderDetailLabel extends StatelessWidget {

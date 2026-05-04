@@ -1,1 +1,1 @@
-export 'package:activos_empresa_app/blocs/account/account_bloc.dart';
+export 'package:activos_nfc_app/blocs/account/account_bloc.dart';

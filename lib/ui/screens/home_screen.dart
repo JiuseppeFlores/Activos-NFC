@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:activos_empresa_app/blocs/account/account_bloc.dart';
-import 'package:activos_empresa_app/common/data/data.dart';
-import 'package:activos_empresa_app/core/models/models.dart';
-import 'package:activos_empresa_app/ui/pages/pages.dart';
+import 'package:activos_nfc_app/blocs/account/account_bloc.dart';
+import 'package:activos_nfc_app/common/data/data.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/core/navigation/route_manager.dart';
+import 'package:activos_nfc_app/ui/pages/pages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,9 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.pushNamed(context, 'qr'),
-        label: Text('Registrar'),
-        icon: Icon(Icons.qr_code),
+        onPressed: () => RouteManager.goToNFCScanning(context),
+        label: Text('Escanear Activo'),
+        icon: Icon(Icons.nfc),
       ),
     );
   }

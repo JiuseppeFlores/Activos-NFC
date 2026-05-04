@@ -1,4 +1,4 @@
-name: activos_empresa_app
+name: activos_nfc_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -45,6 +45,8 @@ dependencies:
   flutter_native_splash: ^2.4.6
   flutter_launcher_icons: ^0.14.4
   webview_flutter: ^4.13.1
+  nfc_manager: ^3.4.1
+  app_settings: ^7.0.0
 
 dev_dependencies:
   flutter_test:

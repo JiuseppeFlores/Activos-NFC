@@ -1,7 +1,7 @@
-import 'package:activos_empresa_app/blocs/blocs.dart';
-import 'package:activos_empresa_app/common/utils/utils.dart';
-import 'package:activos_empresa_app/core/models/models.dart';
-import 'package:activos_empresa_app/ui/screens/screens.dart';
+import 'package:activos_nfc_app/blocs/blocs.dart';
+import 'package:activos_nfc_app/common/utils/utils.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/ui/screens/screens.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +30,7 @@ class ActivoEmpresa extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Activos Empresa',
+      title: 'Activos NFC',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 107, 169, 255)),

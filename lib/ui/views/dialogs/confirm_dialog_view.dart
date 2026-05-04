@@ -1,5 +1,5 @@
-import 'package:activos_empresa_app/common/data/data.dart';
-import 'package:activos_empresa_app/ui/widgets/widgets.dart';
+import 'package:activos_nfc_app/common/data/data.dart';
+import 'package:activos_nfc_app/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmDialogView extends StatelessWidget {

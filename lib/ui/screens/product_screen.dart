@@ -1,16 +1,19 @@
-import 'package:activos_empresa_app/blocs/blocs.dart';
-import 'package:activos_empresa_app/core/models/models.dart';
-import 'package:activos_empresa_app/ui/pages/pages.dart';
+import 'package:activos_nfc_app/blocs/blocs.dart';
+import 'package:activos_nfc_app/common/enums/enums.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductScreen extends StatefulWidget {
 
-  final String barcode;
+  final String code;
+  final ScanType type;
 
   const ProductScreen({
     super.key,
-    required this.barcode,
+    required this.code,
+    required this.type,
   });
 
   @override
@@ -25,7 +28,18 @@ class _ProductScreenState extends State<ProductScreen> {
   bool _loading = true;
 
   void _loadProductByBarcode() async {
-    final data = await _accountBloc.getProductByBarcode(context, widget.barcode);
+    final data = await _accountBloc.getProductByBarcode(context, widget.code);
+    if(data != null){
+      setState(() {
+        _user = data['user'];
+        _product = data['product'];
+      });
+    }
+    setState(() => _loading = false);
+  }
+
+  void _loadProductByUIDTag() async {
+    final data = await _accountBloc.getProductByUIDTag(context, widget.code);
     if(data != null){
       setState(() {
         _user = data['user'];
@@ -39,7 +53,11 @@ class _ProductScreenState extends State<ProductScreen> {
   void initState() {
     super.initState();
     _accountBloc = BlocProvider.of<AccountBloc>(context);
-    _loadProductByBarcode();
+    if(widget.type == ScanType.barcode){
+      _loadProductByBarcode();
+    }else if(widget.type == ScanType.nfc){
+      _loadProductByUIDTag();
+    }
   }
 
   @override
@@ -47,7 +65,7 @@ class _ProductScreenState extends State<ProductScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.barcode,
+          widget.code,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
             color: Theme.of(context).colorScheme.surface,
             fontWeight: FontWeight.bold,

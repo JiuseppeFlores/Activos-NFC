@@ -1,5 +1,5 @@
-import 'package:activos_empresa_app/core/models/models.dart';
-import 'package:activos_empresa_app/ui/pages/pages.dart';
+import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
