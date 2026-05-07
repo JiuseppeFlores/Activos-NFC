@@ -81,6 +81,7 @@ class _LoginFormState extends State<LoginForm> {
       if (widget.onSubmit != null) {
         setState(() => _loading = true);
         await widget.onSubmit!.call(_username.text, _password.text);
+        if (!mounted) return;
         setState(() => _loading = false);
       }
     }

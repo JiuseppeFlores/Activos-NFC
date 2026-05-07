@@ -1,6 +1,6 @@
 import 'package:activos_nfc_app/blocs/blocs.dart';
-import 'package:activos_nfc_app/common/utils/utils.dart';
 import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/core/repositories/session_repository.dart';
 import 'package:activos_nfc_app/ui/screens/screens.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +10,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
 
   await dotenv.load(fileName: '.env');
-  Session session = await SharedPreferencesManager.getSession();
+  final sessionRepository = SessionRepository();
+  Session session = await sessionRepository.getSession();
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AccountBloc(session: session)),
+        BlocProvider(create: (_) => AuthCubit()),
+        BlocProvider(create: (_) => AssetCubit()),
       ],
       child: const ActivoEmpresa(),
     ),

@@ -1,9 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:activos_nfc_app/common/enums/enums.dart';
 import 'package:activos_nfc_app/common/utils/utils.dart';
 import 'package:activos_nfc_app/core/clients/clients.dart';
 import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/core/repositories/session_repository.dart';
 import 'package:activos_nfc_app/core/services/services.dart';
 import 'package:activos_nfc_app/ui/screens/screens.dart';
 import 'package:activos_nfc_app/ui/views/views.dart';
@@ -17,6 +16,7 @@ part 'account_state.dart';
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   final Session session;
+  final SessionRepository _sessionRepository = SessionRepository();
 
   AccountBloc({required this.session}) : super(AccountState(session: session)) {
     on<OnUpdateSession>((event, emit) => emit(state.copyWith(session: event.session)));
@@ -34,7 +34,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         password: password,
       );
       add(OnUpdateSession(session));
-      SharedPreferencesManager.saveSession(session);
+      await _sessionRepository.saveSession(session);
       BotToastManager.showNotification(
         context, action, '¡Bienvenid@ $username!', ProcessType.success,
       );
@@ -59,7 +59,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         onConfirm: () async {
           final session = Session();
           add(OnUpdateSession(session));
-          await SharedPreferencesManager.saveSession(session);
+          await _sessionRepository.clearSession();
           if(onConfirm != null){ onConfirm(); }
           Navigator.pushAndRemoveUntil(
             context, 

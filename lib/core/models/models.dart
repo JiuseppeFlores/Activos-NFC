@@ -3,3 +3,6 @@ export 'package:activos_nfc_app/core/models/user.dart';
 export 'package:activos_nfc_app/core/models/api_response.dart';
 export 'package:activos_nfc_app/core/models/session.dart';
 export 'package:activos_nfc_app/core/models/api.dart';
+export 'package:activos_nfc_app/core/models/auth_response.dart';
+export 'package:activos_nfc_app/core/models/asset.dart';
+

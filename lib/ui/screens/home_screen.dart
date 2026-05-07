@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:activos_nfc_app/blocs/account/account_bloc.dart';
+import 'package:activos_nfc_app/blocs/auth/auth_cubit.dart';
+import 'package:activos_nfc_app/blocs/auth/auth_state.dart';
 import 'package:activos_nfc_app/common/data/data.dart';
 import 'package:activos_nfc_app/core/models/models.dart';
 import 'package:activos_nfc_app/core/navigation/route_manager.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+import 'package:activos_nfc_app/ui/screens/asset_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -60,6 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       )
+      ..addJavaScriptChannel(
+        'AndroidRegisterNFCCode',
+        onMessageReceived: (JavaScriptMessage jsMessage) {
+          final idActivo = jsMessage.message.toString();
+          if(idActivo.isNotEmpty){
+            _registerNFCCode(idActivo);
+          }
+        },
+      )
       ..enableZoom(false)
       ..loadRequest(Uri.parse(_baseUrl));
 
@@ -89,6 +101,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _logoutWeb() {
     _controller.loadRequest(Uri.parse('$_baseUrl/login/logout.php'));
+  }
+
+  void _registerNFCCode(String idActivo) {
+    final id = int.tryParse(idActivo);
+    if (id != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AssetDetailScreen(assetId: id),
+        ),
+      );
+    }
   }
 
   @override
@@ -141,10 +165,19 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => RouteManager.goToNFCScanning(context),
-        label: Text('Escanear Activo'),
-        icon: Icon(Icons.nfc),
+      floatingActionButton: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          final userRole = state.authResponse?.user.roleId;
+          final canScan = userRole == 1 || userRole == 2;
+          
+          if (!canScan) return const SizedBox();
+
+          return FloatingActionButton.extended(
+            onPressed: () => RouteManager.goToNFCScanning(context),
+            label: const Text('Escanear Activo'),
+            icon: const Icon(Icons.nfc),
+          );
+        },
       ),
     );
   }

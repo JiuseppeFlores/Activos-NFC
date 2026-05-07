@@ -2,3 +2,6 @@ export 'package:activos_nfc_app/core/clients/user_client.dart';
 export 'package:activos_nfc_app/core/clients/inventory_client.dart';
 export 'package:activos_nfc_app/core/clients/product_client.dart';
 export 'package:activos_nfc_app/core/clients/login_client.dart';
+export 'package:activos_nfc_app/core/clients/auth_client.dart';
+export 'package:activos_nfc_app/core/clients/asset_client.dart';
+
