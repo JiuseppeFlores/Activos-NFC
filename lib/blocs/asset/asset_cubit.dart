@@ -1,21 +1,23 @@
 import 'package:activos_nfc_app/blocs/asset/asset_state.dart';
-import 'package:activos_nfc_app/core/clients/clients.dart';
+import 'package:activos_nfc_app/common/enums/enums.dart';
 import 'package:activos_nfc_app/core/repositories/asset_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AssetCubit extends Cubit<AssetState> {
   final AssetRepository _assetRepository;
 
-  AssetCubit({
-    AssetRepository? assetRepository,
-  })  : _assetRepository = assetRepository ?? AssetRepository(AssetClient()),
+  AssetCubit({required AssetRepository assetRepository})
+      : _assetRepository = assetRepository,
         super(const AssetState());
 
-  Future<void> loadAsset(int id) async {
+  void resetStatus() {
+    emit(state.copyWith(status: AssetStatus.initial));
+  }
+
+  Future<void> loadAssetById(int id) async {
     emit(state.copyWith(status: AssetStatus.loading));
-    
     final response = await _assetRepository.getAssetById(id);
-    
+
     if (response.isSuccessful) {
       emit(state.copyWith(
         status: AssetStatus.success,
@@ -29,27 +31,48 @@ class AssetCubit extends Cubit<AssetState> {
     }
   }
 
-  Future<void> assignNfcTag(String nfcTag) async {
-    if (state.asset == null) return;
-    
-    emit(state.copyWith(status: AssetStatus.updating));
-    
-    final response = await _assetRepository.assignNfcTag(state.asset!.id, nfcTag);
-    
+  Future<void> loadAsset(String code, ScanType type) async {
+    emit(state.copyWith(status: AssetStatus.loading));
+
+    final response = type == ScanType.barcode 
+      ? await _assetRepository.getAssetByBarcode(code)
+      : await _assetRepository.getAssetByNfcUid(code);
+
     if (response.isSuccessful) {
       emit(state.copyWith(
-        status: AssetStatus.updateSuccess,
-        asset: state.asset!.copyWith(nfcTag: nfcTag),
+        status: AssetStatus.success,
+        asset: response.data,
       ));
+    } else {
+      emit(state.copyWith(
+        status: AssetStatus.error,
+        errorMessage: response.error,
+      ));
+    }
+  }
+
+  Future<void> updateNfcTag(int id, String nfcTag) async {
+    emit(state.copyWith(status: AssetStatus.updating));
+
+    final response = await _assetRepository.assignNfcTag(id, nfcTag);
+
+    if (response.isSuccessful) {
+      final detailResponse = await _assetRepository.getAssetById(id);
+      if (detailResponse.isSuccessful) {
+        emit(state.copyWith(
+          status: AssetStatus.updateSuccess,
+          asset: detailResponse.data,
+        ));
+      } else {
+        emit(state.copyWith(
+          status: AssetStatus.updateSuccess,
+        ));
+      }
     } else {
       emit(state.copyWith(
         status: AssetStatus.updateError,
         errorMessage: response.error,
       ));
     }
-  }
-
-  void resetStatus() {
-    emit(state.copyWith(status: AssetStatus.success));
   }
 }

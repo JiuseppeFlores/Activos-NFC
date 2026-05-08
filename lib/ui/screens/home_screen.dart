@@ -1,12 +1,9 @@
 import 'dart:io';
-
-import 'package:activos_nfc_app/blocs/account/account_bloc.dart';
 import 'package:activos_nfc_app/blocs/auth/auth_cubit.dart';
 import 'package:activos_nfc_app/blocs/auth/auth_state.dart';
 import 'package:activos_nfc_app/common/data/data.dart';
-import 'package:activos_nfc_app/core/models/models.dart';
-import 'package:activos_nfc_app/core/navigation/route_manager.dart';
 import 'package:activos_nfc_app/ui/pages/pages.dart';
+import 'package:activos_nfc_app/ui/views/dialogs/nfc_entry_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,15 +25,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   late final WebViewController _controller;
-  late final AccountBloc _accountBloc;
-  late final Session _session;
   late final String _baseUrl;
 
   @override
   void initState() {
     super.initState();
-    _accountBloc = BlocProvider.of<AccountBloc>(context);
-    _session = _accountBloc.state.session;
+    final authState = context.read<AuthCubit>().state;
+    final username = authState.username ?? '';
+    final password = authState.password ?? '';
     _baseUrl = dotenv.env['URL_SERVER'] ?? 'https://stisbolivia.com';
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
@@ -50,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final WebViewController controller =
         WebViewController.fromPlatformCreationParams(params);
-    // #enddocregion platform_features
 
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -58,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         NavigationDelegate(
           onPageFinished: (String url) {
             if(url.contains('login')){
-              _loginWeb(_session.username, _session.password);
+              _loginWeb(username, password);
             }
           },
         ),
@@ -115,6 +110,32 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _handleLogout() {
+    const action = 'CERRAR SESIÓN';
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(action),
+        content: const Text('¿Está seguro que desea salir de la sesión actual?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () async {
+              _logoutWeb();
+              await context.read<AuthCubit>().logout();
+              if (!mounted) return;
+              Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
+            },
+            child: const Text('Salir', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,36 +155,26 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.logout,
               color: Theme.of(context).colorScheme.surface,
             ),
-            onPressed: () {
-              final accountBloc = BlocProvider.of<AccountBloc>(context);
-              accountBloc.logout(context, _logoutWeb);
-            },
+            onPressed: _handleLogout,
           ),
         ],
       ),
-      body: BlocBuilder<AccountBloc, AccountState>(
-        builder: (context, state) {
-          return SafeArea(
-            child: PopScope(
-              onPopInvokedWithResult: (didPop, result) async {
-                if(didPop){
-                  Navigator.of(context).pop();
-                }else{
-                  if(await _controller.canGoBack()){
-                    _controller.goBack();
-                  }else{
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
-                  }
-                }
-              },
-              canPop: true,
-              child: HomePage(
-                controller: _controller,
-              ),
-            ),
-          );
-        },
+      body: SafeArea(
+        child: PopScope(
+          onPopInvokedWithResult: (didPop, result) async {
+            if(didPop){
+              return;
+            }else{
+              if(await _controller.canGoBack()){
+                _controller.goBack();
+              }
+            }
+          },
+          canPop: true,
+          child: HomePage(
+            controller: _controller,
+          ),
+        ),
       ),
       floatingActionButton: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
@@ -173,9 +184,14 @@ class _HomeScreenState extends State<HomeScreen> {
           if (!canScan) return const SizedBox();
 
           return FloatingActionButton.extended(
-            onPressed: () => RouteManager.goToNFCScanning(context),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => const ScanEntryDialog(),
+              );
+            },
             label: const Text('Escanear Activo'),
-            icon: const Icon(Icons.nfc),
+            icon: const Icon(Icons.qr_code_scanner),
           );
         },
       ),

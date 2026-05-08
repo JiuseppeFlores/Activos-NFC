@@ -20,7 +20,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AssetCubit>().loadAsset(widget.assetId);
+    context.read<AssetCubit>().loadAssetById(widget.assetId);
   }
 
   @override
@@ -57,7 +57,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
       return;
     }
 
-    context.read<AssetCubit>().assignNfcTag(nfcTag);
+    context.read<AssetCubit>().updateNfcTag(widget.assetId, nfcTag);
   }
 
   @override
@@ -83,6 +83,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
               state.errorMessage ?? 'Error al actualizar', 
               ProcessType.danger,
             );
+            context.read<AssetCubit>().resetStatus();
           }
         },
         builder: (context, state) {
@@ -154,7 +155,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
         child: Column(
           children: [
             _buildInfoRow('ID:', asset.id.toString()),
-            _buildInfoRow('Producto:', asset.name),
+            _buildInfoRow('Activo:', asset.name),
             _buildInfoRow('Cód. Barras:', asset.barcode),
             _buildInfoRow('Estado:', asset.status ?? 'N/A'),
             _buildInfoRow('Valoración:', asset.valuation ?? 'N/A'),

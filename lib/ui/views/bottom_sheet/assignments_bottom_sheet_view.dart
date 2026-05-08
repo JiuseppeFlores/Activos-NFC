@@ -20,27 +20,10 @@ class AssignmentsBottomSheetView extends StatefulWidget {
 
 class _AssignmentsBottomSheetViewState extends State<AssignmentsBottomSheetView> {
 
-  late bool _loading;
-  late AccountBloc _accountBloc;
-  late List<Product> _assets;
-
-  void _loadAssets() async {
-    setState(() => _loading = true);
-    final assets = await _accountBloc.getAssignments(context, widget.user.identityCard);
-    setState(() {
-      //_assets = [...assets,...assets,...assets,...assets,...assets,...assets,...assets];
-      _assets = assets;
-      _loading = false;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _loading = false;
-    _assets = [];
-    _accountBloc = BlocProvider.of<AccountBloc>(context);
-    _loadAssets();
+    context.read<AssignedAssetsCubit>().loadAssignedAssets(widget.user.identityCard);
   }
 
   @override
@@ -56,55 +39,70 @@ class _AssignmentsBottomSheetViewState extends State<AssignmentsBottomSheetView>
             fontWeight: FontWeight.bold,
           ),
         ),
-        Divider(height: 32),
+        const Divider(height: 32),
         Expanded(
-          child: _loading 
-            ? CircularProgressLabel(
-                label: 'Cargando bienes asignados,\nespere por favor...',
-              )
-            : _assets.isEmpty
-                ? PlaceholderView(
-                    icon: Icons.assignment_late,
-                    label: 'Sin asignaciones',
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Bienes asignados',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        SizedBox(height: 16),
-                        SizedBox(
-                          height: 320,
-                          child: ListView.separated(
-                            itemBuilder: (context, index) {
-                              final item = _assets[index];
-                              return ListTile(
-                                leading: Icon(
-                                  Icons.assignment,
-                                  size: 32,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                                title: Text(
-                                  item.name,
-                                  style: Theme.of(context).textTheme.titleMedium,
-                                ),
-                                subtitle: Text(
-                                  item.barcode,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              );
-                            },
-                            separatorBuilder: (context, index) => SizedBox(height: 4),
-                            itemCount: _assets.length,
+          child: BlocBuilder<AssignedAssetsCubit, AssignedAssetsState>(
+            builder: (context, state) {
+              if (state.status == AssignedAssetsStatus.loading) {
+                return const CircularProgressLabel(
+                  label: 'Cargando bienes asignados,\nespere por favor...',
+                );
+              }
+
+              if (state.status == AssignedAssetsStatus.error) {
+                return PlaceholderView(
+                  icon: Icons.error_outline,
+                  label: state.errorMessage ?? 'Error al cargar asignaciones',
+                );
+              }
+
+              final assets = state.assets;
+              if (assets.isEmpty) {
+                return const PlaceholderView(
+                  icon: Icons.assignment_late,
+                  label: 'Sin asignaciones',
+                );
+              }
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Bienes asignados',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        final item = assets[index];
+                        return ListTile(
+                          leading: Icon(
+                            Icons.assignment,
+                            size: 32,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
-                        ),
-                      ],
+                          title: Text(
+                            item.name,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          subtitle: Text(
+                            item.barcode,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(height: 4),
+                      itemCount: assets.length,
                     ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ],
     );
   }
-}
+}

@@ -5,6 +5,5 @@ class AuthClient extends DioClient {
   AuthClient()
     : super(
         baseUrl: '${dotenv.env['URL_SERVER']}/api/v1/sesion',
-        isAuthenticatorRequired: false,
       );
 }

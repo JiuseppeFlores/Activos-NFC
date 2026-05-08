@@ -1,15 +1,9 @@
-import 'package:activos_nfc_app/core/models/models.dart';
 import 'package:activos_nfc_app/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
 
-  final Session? session;
-
-  const LoginScreen({
-    super.key,
-    this.session,
-  });
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +24,7 @@ class LoginScreen extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         child: Center(
           child: SingleChildScrollView(
-            child: LoginPage(
-              session: session,
-            ),
+            child: const LoginPage(),
           ),
         ),
       ),

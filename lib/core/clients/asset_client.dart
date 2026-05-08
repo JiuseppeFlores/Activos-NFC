@@ -5,6 +5,5 @@ class AssetClient extends DioClient {
   AssetClient()
     : super(
         baseUrl: '${dotenv.env['URL_SERVER']}/api/v1/activos',
-        isAuthenticatorRequired: true,
       );
 }

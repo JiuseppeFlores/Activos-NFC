@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 
 class RouteManager {
 
-  static void goToNFCScanning(BuildContext context) {
+  static void goToNfcScan(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const NFCScanningScreen(),
+        builder: (context) => const NfcScanScreen(),
       ),
     );
   }
 
-  static void goToProductScreen(BuildContext context, ScanType type, String uidTag){
+  static void goToAssetViewScreen(BuildContext context, ScanType type, String code){
     Navigator.push(
       context, 
       MaterialPageRoute(
         builder: (_) 
-          => ProductScreen(code: uidTag, type: type),
+          => AssetViewScreen(code: code, type: type),
       )
     );
   }

@@ -1,24 +1,33 @@
 import 'package:activos_nfc_app/common/utils/utils.dart';
-import 'package:activos_nfc_app/core/clients/clients.dart';
 import 'package:activos_nfc_app/core/models/models.dart';
+import 'package:activos_nfc_app/core/repositories/session_repository.dart';
+import 'package:activos_nfc_app/core/services/auth_service.dart';
 
 class AuthRepository {
-  final AuthClient _authClient;
+  final AuthService _authService;
+  final SessionRepository _sessionRepository;
 
-  AuthRepository(this._authClient);
+  AuthRepository(this._authService, this._sessionRepository);
 
   Future<ApiResponse> login(String username, String password) async {
     try {
-      const path = '/iniciar.php';
-      final response = await _authClient.postWithoutJwt(
-        path,
-        body: {'usuario': username, 'password': password},
-      );
-      
+      final response = await _authService.login(username, password);
       final data = response.data;
+
       if (data != null && data['estado'] == true) {
+        final authResponse = AuthResponse.fromJson(data['datos'] ?? {});
+        
+        // Persistir sesión
+        final session = Session(
+          id: authResponse.user.id,
+          username: username,
+          password: password,
+          token: authResponse.token,
+        );
+        await _sessionRepository.saveSession(session);
+
         return ApiResponse(
-          data: AuthResponse.fromJson(data['datos'] ?? {}),
+          data: authResponse,
           statusCode: data['codigo'],
         );
       } else {
@@ -30,5 +39,13 @@ class AuthRepository {
     } catch (e) {
       return RequestCodeManager.getResponseError(e);
     }
+  }
+
+  Future<Session> getSavedSession() async {
+    return await _sessionRepository.getSession();
+  }
+
+  Future<void> clearSession() async {
+    await _sessionRepository.clearSession();
   }
 }

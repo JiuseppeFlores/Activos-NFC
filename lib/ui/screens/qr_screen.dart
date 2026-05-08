@@ -1,12 +1,12 @@
-import 'package:activos_nfc_app/common/data/data.dart';
 import 'package:activos_nfc_app/common/enums/enums.dart';
 import 'package:activos_nfc_app/ui/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QRScreen extends StatefulWidget {
+  final bool isSelectionMode;
 
-  const QRScreen({super.key});
+  const QRScreen({super.key, this.isSelectionMode = false});
 
   @override
   State<QRScreen> createState() => _QRScreenState();
@@ -20,19 +20,27 @@ class _QRScreenState extends State<QRScreen> {
     if (mounted) {
 
       Barcode? barcode = barcodes.barcodes.firstOrNull;
+      final String? codeValue = barcode?.displayValue;
 
-      if(barcode?.displayValue != null){
+      if(codeValue != null){
         _controller.stop();
-        Navigator.push(
-          context, 
-          MaterialPageRoute(
-            builder: (_) 
-              => ProductScreen(
-                    code: barcode?.displayValue ?? DefaultData.string,
-                    type: ScanType.barcode,
-                  ),
-          )
-        ).then((_) => _controller.start());
+
+        if (widget.isSelectionMode) {
+          // Si es modo selección, devolvemos el valor al widget anterior
+          Navigator.pop(context, codeValue);
+        } else {
+          // Si no, navegamos directamente (comportamiento original)
+          Navigator.push(
+            context, 
+            MaterialPageRoute(
+              builder: (_) 
+                => AssetViewScreen(
+                      code: codeValue,
+                      type: ScanType.barcode,
+                    ),
+            )
+          ).then((_) => _controller.start());
+        }
       }
     }
   }

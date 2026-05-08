@@ -1,4 +1,5 @@
 import 'package:activos_nfc_app/common/data/data.dart';
+import 'package:activos_nfc_app/core/models/user.dart';
 
 class Asset {
   final int id;
@@ -8,6 +9,8 @@ class Asset {
   final String? valuation;
   final String? status;
   final String? nfcTag;
+  final bool isInventoried;
+  final User? assignedUser;
 
   Asset({
     required this.id,
@@ -17,6 +20,8 @@ class Asset {
     this.valuation,
     this.status,
     this.nfcTag,
+    this.isInventoried = false,
+    this.assignedUser,
   });
 
   factory Asset.fromJson(Map<String, dynamic> json) {
@@ -26,8 +31,10 @@ class Asset {
       barcode: json['codigoBarras'] ?? DefaultData.string,
       dateIngress: json['fechaIngreso'],
       valuation: json['valoracion'],
-      status: json['estado'],
+      status: json['estadoActivo'] ?? json['estado'],
       nfcTag: json['uidTag'],
+      isInventoried: json['inventariado'] ?? false,
+      assignedUser: json.containsKey('nombre') ? User.fromJson(json) : null,
     );
   }
 
@@ -39,6 +46,8 @@ class Asset {
     String? valuation,
     String? status,
     String? nfcTag,
+    bool? isInventoried,
+    User? assignedUser,
   }) {
     return Asset(
       id: id ?? this.id,
@@ -48,9 +57,11 @@ class Asset {
       valuation: valuation ?? this.valuation,
       status: status ?? this.status,
       nfcTag: nfcTag ?? this.nfcTag,
+      isInventoried: isInventoried ?? this.isInventoried,
+      assignedUser: assignedUser ?? this.assignedUser,
     );
   }
 
   @override
-  String toString() => 'Asset{id: $id, name: $name, nfcTag: $nfcTag}';
+  String toString() => 'Asset{id: $id, name: $name, nfcTag: $nfcTag, inventoried: $isInventoried}';
 }
