@@ -33,7 +33,7 @@ class _AssetViewScreenState extends State<AssetViewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.code,
+          'Inspección de Activos',
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
             color: Theme.of(context).colorScheme.surface,
             fontWeight: FontWeight.bold,
@@ -96,17 +96,14 @@ class _AssetViewScreenState extends State<AssetViewScreen> {
           if (asset == null) return const SizedBox();
 
           return Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
-            ),
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            child: Center(
-              child: SingleChildScrollView(
-                child: AssetViewPage(
-                  user: asset.assignedUser ?? User(),
-                  asset: asset,
-                ),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: AssetViewPage(
+                user: asset.assignedUser ?? User(),
+                asset: asset,
               ),
             ),
           );

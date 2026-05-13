@@ -11,6 +11,7 @@ class Asset {
   final String? nfcTag;
   final bool isInventoried;
   final User? assignedUser;
+  final String? assessment;
 
   Asset({
     required this.id,
@@ -22,6 +23,7 @@ class Asset {
     this.nfcTag,
     this.isInventoried = false,
     this.assignedUser,
+    this.assessment,
   });
 
   factory Asset.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class Asset {
       nfcTag: json['uidTag'],
       isInventoried: json['inventariado'] ?? false,
       assignedUser: json.containsKey('nombre') ? User.fromJson(json) : null,
+      assessment: json['valoracion'],
     );
   }
 
@@ -48,6 +51,7 @@ class Asset {
     String? nfcTag,
     bool? isInventoried,
     User? assignedUser,
+    String? assessment,
   }) {
     return Asset(
       id: id ?? this.id,
@@ -59,9 +63,10 @@ class Asset {
       nfcTag: nfcTag ?? this.nfcTag,
       isInventoried: isInventoried ?? this.isInventoried,
       assignedUser: assignedUser ?? this.assignedUser,
+      assessment: assessment ?? this.assessment,
     );
   }
 
   @override
-  String toString() => 'Asset{id: $id, name: $name, nfcTag: $nfcTag, inventoried: $isInventoried}';
+  String toString() => 'Asset{id: $id, name: $name, nfcTag: $nfcTag, inventoried: $isInventoried, assessment: $assessment}';
 }

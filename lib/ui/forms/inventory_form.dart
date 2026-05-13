@@ -53,7 +53,7 @@ class _InventoryFormState extends State<InventoryForm> {
           SizedBox(
             width: double.infinity,
             child: CustomFilledButton(
-              text: 'Registrar Inventario',
+              text: 'Registrar',
               onTap: _onSubmit,
               color: Theme.of(context).colorScheme.primary,
               disabled: _loading,
